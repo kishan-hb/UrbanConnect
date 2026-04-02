@@ -1,0 +1,33 @@
+# Dependency directories
+/client/node_modules
+/server/node_modules
+
+# Package manager files
+/client/.pnp
+/client/.pnp.js
+/server/.pnp
+/server/.pnp.js
+
+# Testing
+/client/coverage
+/server/coverage
+
+# Production builds
+/client/build
+/server/build
+/dist
+
+# Misc
+.DS_Store
+.env
+.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VS Code settings
+.vscode/*
+!.vscode/settings.json
+
+# OS files
+Thumbs.db
