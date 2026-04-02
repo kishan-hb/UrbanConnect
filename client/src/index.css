@@ -20,6 +20,16 @@
   --color-brand-link: #0f56b0;
   --color-kicker: #5a7aa4;
 
+  --color-surface-page: #f5f8fc;
+  --color-surface-card: #ffffff;
+  --color-surface-muted: #eef3fa;
+  --color-surface-brand-soft: #e6effb;
+  --color-border-soft: #e4ebf5;
+  --color-border-strong: #d4deec;
+
+  --shadow-card-sm: 0 8px 24px rgba(16, 35, 61, 0.06);
+  --shadow-card-md: 0 16px 36px rgba(16, 35, 61, 0.08);
+
   --font-size-kicker: 0.82rem;
   --font-size-label-sm: 0.78rem;
   --font-size-label-xs: 0.74rem;
@@ -54,6 +64,8 @@ body {
   font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background: var(--color-surface-page);
 }
 
 code {

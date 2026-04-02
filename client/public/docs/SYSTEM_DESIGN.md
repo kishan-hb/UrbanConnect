@@ -1,7 +1,6 @@
 
 ## Layers & Key Components
 
-Mongo db : kishanhb3961_db_user   PkbcpkZe6TkPrkbo
 
 ### 1. **Edge Delivery**
 - **Users** access the service via web browser or mobile app.
