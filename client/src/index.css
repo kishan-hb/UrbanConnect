@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
@@ -38,17 +42,17 @@
   --font-size-body-sm: 0.94rem;
   --font-size-body-xs: 0.8rem;
   --font-size-body-input: 0.95rem;
-  --font-size-heading-hero: clamp(2.6rem, 5.2vw, 4.8rem);
-  --font-size-heading-section: clamp(1.8rem, 3vw, 2.8rem);
-  --font-size-heading-categories: clamp(2rem, 3.2vw, 2.8rem);
-  --font-size-heading-journey: clamp(2.7rem, 5vw, 4rem);
-  --font-size-heading-professionals: clamp(2.3rem, 4vw, 3rem);
-  --font-size-heading-card-lg: clamp(1.22rem, 1.8vw, 1.6rem);
-  --font-size-heading-card-md: clamp(1.04rem, 1.3vw, 1.24rem);
-  --font-size-heading-card-sm: 0.94rem;
-  --font-size-heading-profile: 1.22rem;
-  --font-size-heading-cta: clamp(2.35rem, 4.4vw, 3.45rem);
-  --font-size-badge-value: 1.35rem;
+  --font-size-heading-hero: clamp(2rem, 5.2vw, 3.2rem);         /* Main hero title */
+  --font-size-heading-section: clamp(1.5rem, 3vw, 2.2rem);      /* Section titles */
+  --font-size-heading-categories: clamp(1.3rem, 2.2vw, 1.7rem); /* Category titles */
+  --font-size-heading-journey: clamp(1.2rem, 2vw, 1.5rem);      /* Journey/step titles */
+  --font-size-heading-professionals: clamp(1.1rem, 1.8vw, 1.3rem); /* Smaller section titles */
+  --font-size-heading-card-lg: clamp(1.05rem, 1.4vw, 1.18rem);  /* Large card titles */
+  --font-size-heading-card-md: clamp(0.98rem, 1.1vw, 1.08rem);  /* Medium card titles */
+  --font-size-heading-card-sm: 0.92rem;                         /* Small card titles */
+  --font-size-heading-profile: 1.05rem;                         /* Profile names */
+  --font-size-heading-cta: clamp(1.4rem, 2.2vw, 2rem);          /* Call-to-action titles */
+  --font-size-badge-value: 1.1rem;                              /* Badge numbers/values */
 
   --line-height-heading-tight: 0.92;
   --line-height-body: 1.7;
