@@ -29,6 +29,20 @@ export function completeBookingAdmin(id, token) {
   });
 }
 
+export function acceptBookingProvider(id, token) {
+  return apiClient(`/api/bookings/${id}/accept`, {
+    method: 'PATCH',
+    token,
+  });
+}
+
+export function rejectBookingProvider(id, token) {
+  return apiClient(`/api/bookings/${id}/reject`, {
+    method: 'PATCH',
+    token,
+  });
+}
+
 export function deleteBookingAdmin(id, token) {
   return apiClient(`/api/bookings/${id}`, {
     method: 'DELETE',
@@ -43,5 +57,4 @@ export function createBooking(payload, token) {
     token,
   });
 }
-
 
