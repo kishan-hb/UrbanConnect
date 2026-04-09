@@ -93,8 +93,36 @@ const createService = asyncHandler(async (req, res) => {
   }
 });
 
+
+const updateService = asyncHandler(async (req, res) => {
+  const { serviceId } = req.params;
+  const service = await Service.findOne({ serviceId });
+  if (!service) return res.status(404).json({ message: 'Service not found' });
+  if (service.providerClerkId !== req.auth.userId)
+    return res.status(403).json({ message: 'Forbidden' });
+
+  const allowed = ['title', 'category', 'description', 'price', 'availability', 'location'];
+  allowed.forEach((field) => {
+    if (req.body[field] !== undefined) service[field] = req.body[field];
+  });
+  const updated = await service.save();
+  res.json(updated);
+});
+
+const deleteService = asyncHandler(async (req, res) => {
+  const { serviceId } = req.params;
+  const service = await Service.findOne({ serviceId });
+  if (!service) return res.status(404).json({ message: 'Service not found' });
+  if (service.providerClerkId !== req.auth.userId)
+    return res.status(403).json({ message: 'Forbidden' });
+  await service.deleteOne();
+  res.json({ message: 'Service deleted' });
+});
+
 module.exports = {
   getAllServices,
   getServiceById,
-  createService
+  createService,
+  updateService,
+  deleteService
 };

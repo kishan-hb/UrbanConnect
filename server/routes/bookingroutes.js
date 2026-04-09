@@ -9,6 +9,8 @@ const {
   confirmBookingAdmin,
   cancelBookingAdmin,
   completeBookingAdmin,
+  acceptBookingProvider,
+  rejectBookingProvider,
   deleteBookingAdmin,
 } = require('../controllers/bookingController');
 
@@ -20,6 +22,7 @@ router.delete('/:id', requireAuthentication, requireRole('admin'), deleteBooking
 router.patch('/:id/confirm', requireAuthentication, requireRole('admin'), confirmBookingAdmin);
 router.patch('/:id/cancel', requireAuthentication, requireRole('admin'), cancelBookingAdmin);
 router.patch('/:id/complete', requireAuthentication, requireRole('admin'), completeBookingAdmin);
+router.patch('/:id/accept', requireAuthentication, requireRole('provider'), acceptBookingProvider);
+router.patch('/:id/reject', requireAuthentication, requireRole('provider'), rejectBookingProvider);
 
 module.exports = router;
-

@@ -5,11 +5,15 @@ const {requireRole} = require('../middleware/role');
 const {
   getAllServices,
   getServiceById,
-  createService
+  createService,
+  updateService,
+  deleteService
 } = require('../controllers/serviceController');
 
 router.get('/', getAllServices);
 router.get('/:id', getServiceById);
 router.post('/', requireAuthentication, requireRole('provider'), createService);
+router.patch('/:serviceId', requireAuthentication, requireRole('provider'), updateService);
+router.delete('/:serviceId', requireAuthentication, requireRole('provider'), deleteService);
 
 module.exports = router;
