@@ -29,7 +29,7 @@ function AuthLayout({ children }) {
             </button>
           ))}
         </nav>
-        <p className="auth-legal-copy">© 2026 UrbanConnect. All rights reserved.</p>
+        <p className="auth-legal-copy">ï¿½ 2026 UrbanConnect. All rights reserved.</p>
       </footer>
     </main>
   );
