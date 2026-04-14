@@ -364,6 +364,92 @@
   color: #b24646;
 }
 
+.dashboard-inline-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dashboard-review-card {
+  background: #f6f9fc;
+  border-radius: 24px;
+  display: grid;
+  gap: 18px;
+  margin-top: 6px;
+  padding: 20px;
+}
+
+.dashboard-review-header {
+  align-items: start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.dashboard-review-header h3 {
+  color: var(--color-text-heading);
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  margin: 10px 0 8px;
+}
+
+.dashboard-review-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-sm);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dashboard-review-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-review-field {
+  background: #ffffff;
+  border-radius: 18px;
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+}
+
+.dashboard-review-field span {
+  color: var(--color-text-soft);
+  font-size: var(--font-size-label-xs);
+  font-weight: 800;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.dashboard-review-field strong {
+  color: var(--color-text-heading);
+  font-size: 0.96rem;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+.dashboard-review-field input,
+.dashboard-review-field select,
+.dashboard-review-field textarea {
+  background: #f6f9fc;
+  border: 1px solid #e2eaf4;
+  border-radius: 14px;
+  color: var(--color-text-heading);
+  font-family: inherit;
+  font-size: var(--font-size-body-md);
+  padding: 12px 14px;
+  width: 100%;
+}
+
+.dashboard-review-field textarea {
+  resize: vertical;
+}
+
+.dashboard-review-field-full {
+  grid-column: 1 / -1;
+}
+
 .dashboard-schedule-grid,
 .dashboard-fact-grid {
   display: grid;
@@ -455,6 +541,10 @@
   .dashboard-list-item,
   .dashboard-approval-item,
   .dashboard-activity-item {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-review-grid {
     grid-template-columns: 1fr;
   }
 
