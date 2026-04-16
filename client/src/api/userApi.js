@@ -8,6 +8,14 @@ export function createUser(userData, token) {
   });
 }
 
-export function getUserByClerkId(clerkId) {
-  return apiClient(`/api/users/clerk/${clerkId}`);
+export function getUserByClerkId(clerkId, token) {
+  return apiClient(`/api/users/clerk/${clerkId}`, { token });
+}
+
+export function requestProviderAccess(payload, token) {
+  return apiClient('/api/users/request-provider-access', {
+    method: 'POST',
+    body: payload,
+    token,
+  });
 }
