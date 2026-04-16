@@ -14,7 +14,7 @@ const errorhandler = require('./middleware/errorhandler');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(clerkMiddleware());
+app.use(clerkMiddleware({ publishableKey: process.env.CLERK_PUBLISHABLE_KEY, secretKey: process.env.CLERK_SECRET_KEY }));
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
