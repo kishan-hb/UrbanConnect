@@ -19,11 +19,11 @@ function CtaSection() {
             Book Your First Service
           </Button>
           <Button
-            to="/sign-up"
+            to="/provider-onboarding"
             variant="light-outline"
             className="cta-secondary-button"
           >
-            Become a Partner
+            Become a Provider
           </Button>
         </div>
       </div>

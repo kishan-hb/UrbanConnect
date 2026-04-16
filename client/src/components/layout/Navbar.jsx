@@ -1,7 +1,27 @@
-import { Link, NavLink } from 'react-router-dom';
+import { useClerk } from '@clerk/clerk-react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
+  const { authState } = useAuth();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
+
+  const isSignedIn = Boolean(authState?.isSignedIn);
+  const role = authState?.role;
+
+  async function handleSignOut(event) {
+    event.preventDefault();
+
+    try {
+      await signOut();
+      navigate('/sign-in', { replace: true });
+    } catch {
+      navigate('/sign-in', { replace: true });
+    }
+  }
+
   return (
     <nav className="site-nav" aria-label="Primary">
       <Link to="/" className="site-brand">
@@ -18,21 +38,49 @@ function Navbar() {
         <NavLink to="/" className="site-nav-link">
           Home
         </NavLink>
+
         <NavLink to="/services" className="site-nav-link">
           Find Services
         </NavLink>
-        <NavLink to="/provider" className="site-nav-link">
-          Providers
+
+        <NavLink to="/contact" className="site-nav-link">
+          Contact
         </NavLink>
+
+        {isSignedIn && role === 'customer' ? (
+          <NavLink to="/booking" className="site-nav-link">
+            Booking
+          </NavLink>
+        ) : null}
+
+        {isSignedIn && role === 'provider' ? (
+          <NavLink to="/provider" className="site-nav-link">
+            Provider Dashboard
+          </NavLink>
+        ) : null}
+
+        {isSignedIn && role === 'admin' ? (
+          <NavLink to="/admin" className="site-nav-link">
+            Admin Dashboard
+          </NavLink>
+        ) : null}
       </div>
 
       <div className="site-nav-actions">
-        <NavLink to="/sign-in" className="site-nav-login">
-          Login
-        </NavLink>
-        <NavLink to="/sign-up" className="site-nav-signup">
-          Sign Up
-        </NavLink>
+        {!isSignedIn ? (
+          <>
+            <NavLink to="/sign-in" className="site-nav-login">
+              Login
+            </NavLink>
+            <NavLink to="/sign-up" className="site-nav-signup">
+              Sign Up
+            </NavLink>
+          </>
+        ) : (
+          <NavLink to="/sign-in" className="site-nav-login" onClick={handleSignOut}>
+            Logout
+          </NavLink>
+        )}
       </div>
     </nav>
   );
