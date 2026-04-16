@@ -1,115 +1,121 @@
 const User = require('../models/user');
 const Service = require('../models/services');
+const asyncHandler = require('../utils/asyncHandler');
 
-const getProviderProfile = async (req, res, next) => {
-  try {
-    res.json(req.user);
-  } catch (err) {
-    next(err);
+function buildError(message, status) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
+async function findProviderByClerkId(clerkId) {
+  if (!clerkId) {
+    throw buildError('Clerk ID is required', 400);
   }
-};
 
-const getProviderStatus = async (req, res, next) => {
-  try {
-    res.json({
-      clerkId: req.user.clerkId,
-      role: req.user.role,
-      approvedByAdmin: req.user.approvedByAdmin,
-      backgroundCheckStatus: req.user.backgroundCheckStatus,
-      isActive: req.user.isActive
-    });
-  } catch (err) {
-    next(err);
+  const provider = await User.findOne({ clerkId, role: 'provider' });
+  if (!provider) {
+    throw buildError('Provider not found', 404);
   }
-};
 
-const updateProviderProfile = async (req, res, next) => {
-  try {
-    const allowedFields = ['username', 'profilePicture', 'phone', 'bio'];
-    const updates = {};
+  return provider;
+}
 
-    allowedFields.forEach((field) => {
-      if (req.body[field] !== undefined) {
-        updates[field] = req.body[field];
-      }
-    });
+function toProviderPublic(provider) {
+  return {
+    id: provider._id,
+    clerkId: provider.clerkId,
+    username: provider.username,
+    profilePicture: provider.profilePicture,
+    bio: provider.bio,
+    phone: provider.phone,
+    servicesOffered: provider.servicesOffered,
+    role: provider.role,
+    rating: provider.rating
+  };
+}
 
-    const updatedProvider = await User.findByIdAndUpdate(req.user._id, updates, {
-      new: true,
-      runValidators: true
-    });
+const getProviderProfile = asyncHandler(async (req, res) => {
+  res.json(toProviderPublic(req.user));
+});
 
-    res.json(updatedProvider);
-  } catch (err) {
-    next({ status: 400, message: err.message });
-  }
-};
+const getProviderStatus = asyncHandler(async (req, res) => {
+  res.json({
+    ...toProviderPublic(req.user),
+    approvedByAdmin: req.user.approvedByAdmin,
+    backgroundCheckStatus: req.user.backgroundCheckStatus,
+    isActive: req.user.isActive
+  });
+});
 
-const updateProviderDocuments = async (req, res, next) => {
-  try {
-    const { documents } = req.body || {};
+const updateProviderProfile = asyncHandler(async (req, res) => {
+  const allowedFields = ['username', 'profilePicture', 'phone', 'bio'];
+  const updates = {};
 
-    if (!Array.isArray(documents)) {
-      return res.status(400).json({ message: 'documents must be an array' });
+  allowedFields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updates[field] = req.body[field];
     }
+  });
 
-    req.user.documents = documents;
-    req.user.backgroundCheckStatus = 'pending';
-    req.user.approvedByAdmin = false;
-
-    const updatedProvider = await req.user.save();
-    res.json({
-      message: 'Provider documents updated successfully',
-      user: updatedProvider
-    });
-  } catch (err) {
-    next({ status: 400, message: err.message });
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ message: 'No valid fields to update' });
   }
-};
 
-const getMyServices = async (req, res, next) => {
-  try {
-    const services = await Service.find({ providerClerkId: req.user.clerkId }).sort({ createdAt: -1 });
-    res.json(services);
-  } catch (err) {
-    next(err);
+  const updatedProvider = await User.findByIdAndUpdate(req.user._id, updates, {
+    new: true,
+    runValidators: true
+  });
+
+  if (!updatedProvider) {
+    throw buildError('Provider not found', 404);
   }
-};
 
-const getProviderByClerkId = async (req, res, next) => {
-  try {
-    const provider = await User.findOne({
-      clerkId: req.params.clerkId,
-      role: 'provider'
-    });
+  res.json(toProviderPublic(updatedProvider));
+});
 
-    if (!provider) {
-      return res.status(404).json({ message: 'Provider not found' });
+const updateProviderDocuments = asyncHandler(async (req, res) => {
+  const { documents } = req.body || {};
+  if (!Array.isArray(documents)) {
+    return res.status(400).json({ message: 'documents must be an array' });
+  }
+
+  const invalidDoc = documents.some((doc) => typeof doc !== 'string' || doc.trim() === '');
+  if (invalidDoc) {
+    return res.status(400).json({ message: 'Each document must be a non-empty string' });
+  }
+
+  req.user.documents = documents;
+  req.user.backgroundCheckStatus = 'pending';
+  req.user.approvedByAdmin = false;
+
+  const updatedProvider = await req.user.save();
+  res.json({
+    message: 'Provider documents updated successfully',
+    user: {
+      ...toProviderPublic(updatedProvider),
+      approvedByAdmin: updatedProvider.approvedByAdmin,
+      backgroundCheckStatus: updatedProvider.backgroundCheckStatus,
+      isActive: updatedProvider.isActive
     }
+  });
+});
 
-    res.json(provider);
-  } catch (err) {
-    next(err);
-  }
-};
+const getMyServices = asyncHandler(async (req, res) => {
+  const services = await Service.find({ providerClerkId: req.user.clerkId }).sort({ createdAt: -1 });
+  res.json(services);
+});
 
-const getProviderServicesByClerkId = async (req, res, next) => {
-  try {
-    const provider = await User.findOne({
-      clerkId: req.params.clerkId,
-      role: 'provider'
-    });
+const getProviderByClerkId = asyncHandler(async (req, res) => {
+  const provider = await findProviderByClerkId(req.params.clerkId);
+  res.json(toProviderPublic(provider));
+});
 
-    if (!provider) {
-      return res.status(404).json({ message: 'Provider not found' });
-    }
-
-    const services = await Service.find({ providerClerkId: req.params.clerkId }).sort({ createdAt: -1 });
-    res.json(services);
-  } catch (err) {
-    next(err);
-  }
-};
+const getProviderServicesByClerkId = asyncHandler(async (req, res) => {
+  await findProviderByClerkId(req.params.clerkId);
+  const services = await Service.find({ providerClerkId: req.params.clerkId }).sort({ createdAt: -1 });
+  res.json(services);
+});
 
 module.exports = {
   getProviderProfile,

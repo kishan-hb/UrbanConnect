@@ -1,61 +1,51 @@
-const mongoose = require('mongoose');
 const User = require('../models/user');
 const { isValidObjectId } = require('../utils/validateObjectId');
+const asyncHandler = require('../utils/asyncHandler');
 
-const getAllUsersAdmin = async (req, res, next) => {
-  try {
-    const users = await User.find().sort({ createdAt: -1 });
-    res.json(users);
-  } catch (err) {
-    next(err);
+function buildError(message, status) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
+const getAllUsersAdmin = asyncHandler(async (req, res) => {
+  const users = await User.find().sort({ createdAt: -1 });
+  res.json(users);
+});
+
+const getUserByIdAdmin = asyncHandler(async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid user id' });
   }
-};
 
-const getUserByIdAdmin = async (req, res, next) => {
-  try {
-    if (!isValidObjectId(req.params.id)) {
-      return res.status(400).json({ message: 'Invalid user id' });
-    }
-
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json(user);
-  } catch (err) {
-    next(err);
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    throw buildError('User not found', 404);
   }
-};
 
-const getPendingProviders = async (req, res, next) => {
-  try {
-    const providers = await User.find({
-      role: 'provider',
-      approvedByAdmin: false
-    }).sort({ createdAt: -1 });
+  res.json(user);
+});
 
-    res.json(providers);
-  } catch (err) {
-    next(err);
-  }
-};
+const getPendingProviders = asyncHandler(async (req, res) => {
+  const providers = await User.find({
+    approvedByAdmin: false,
+    backgroundCheckStatus: 'pending'
+  }).sort({ createdAt: -1 });
 
-const getApprovedProviders = async (req, res, next) => {
-  try {
-    const providers = await User.find({
-      role: 'provider',
-      approvedByAdmin: true
-    }).sort({ createdAt: -1 });
+  res.json(providers);
+});
 
-    res.json(providers);
-  } catch (err) {
-    next(err);
-  }
-};
+const getApprovedProviders = asyncHandler(async (req, res) => {
+  const providers = await User.find({
+    role: 'provider',
+    approvedByAdmin: true,
+    backgroundCheckStatus: 'approved'
+  }).sort({ createdAt: -1 });
 
-const getProviderById = async (id) => {
+  res.json(providers);
+});
+
+const getProviderRequestById = async (id) => {
   if (!isValidObjectId(id)) {
     return { error: { status: 400, message: 'Invalid user id' } };
   }
@@ -66,102 +56,88 @@ const getProviderById = async (id) => {
     return { error: { status: 404, message: 'User not found' } };
   }
 
-  if (user.role !== 'provider') {
-    return { error: { status: 400, message: 'Only provider accounts can be moderated' } };
+  if (user.role === 'admin') {
+    return { error: { status: 400, message: 'Admin accounts cannot be moderated as providers' } };
   }
 
   return { user };
 };
 
-const approveProvider = async (req, res, next) => {
-  try {
-    const result = await getProviderById(req.params.id);
-    if (result.error) {
-      return res.status(result.error.status).json({ message: result.error.message });
-    }
-
-    const user = result.user;
-    user.approvedByAdmin = true;
-    user.backgroundCheckStatus = 'approved';
-
-    const updatedUser = await user.save();
-    res.json({
-      message: 'Provider approved successfully',
-      user: updatedUser
-    });
-  } catch (err) {
-    next({ status: 400, message: err.message });
+const approveProvider = asyncHandler(async (req, res) => {
+  const result = await getProviderRequestById(req.params.id);
+  if (result.error) {
+    return res.status(result.error.status).json({ message: result.error.message });
   }
-};
 
-const rejectProvider = async (req, res, next) => {
-  try {
-    const result = await getProviderById(req.params.id);
-    if (result.error) {
-      return res.status(result.error.status).json({ message: result.error.message });
-    }
+  const user = result.user;
+  user.role = 'provider';
+  user.approvedByAdmin = true;
+  user.backgroundCheckStatus = 'approved';
 
-    const user = result.user;
-    user.approvedByAdmin = false;
-    user.backgroundCheckStatus = 'rejected';
+  const updatedUser = await user.save();
+  res.json({
+    message: 'Provider approved successfully',
+    user: updatedUser
+  });
+});
 
-    const updatedUser = await user.save();
-    res.json({
-      message: 'Provider rejected successfully',
-      user: updatedUser
-    });
-  } catch (err) {
-    next({ status: 400, message: err.message });
+const rejectProvider = asyncHandler(async (req, res) => {
+  const result = await getProviderRequestById(req.params.id);
+  if (result.error) {
+    return res.status(result.error.status).json({ message: result.error.message });
   }
-};
 
-const activateUser = async (req, res, next) => {
-  try {
-    if (!isValidObjectId(req.params.id)) {
-      return res.status(400).json({ message: 'Invalid user id' });
-    }
+  const user = result.user;
+  user.role = 'customer';
+  user.approvedByAdmin = false;
+  user.backgroundCheckStatus = 'rejected';
 
-    const user = await User.findById(req.params.id);
+  const updatedUser = await user.save();
+  res.json({
+    message: 'Provider rejected successfully',
+    user: updatedUser
+  });
+});
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.isActive = true;
-
-    const updatedUser = await user.save();
-    res.json({
-      message: 'User activated successfully',
-      user: updatedUser
-    });
-  } catch (err) {
-    next({ status: 400, message: err.message });
+const activateUser = asyncHandler(async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid user id' });
   }
-};
 
-const deactivateUser = async (req, res, next) => {
-  try {
-    if (!isValidObjectId(req.params.id)) {
-      return res.status(400).json({ message: 'Invalid user id' });
-    }
+  const user = await User.findById(req.params.id);
 
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    user.isActive = false;
-
-    const updatedUser = await user.save();
-    res.json({
-      message: 'User deactivated successfully',
-      user: updatedUser
-    });
-  } catch (err) {
-    next({ status: 400, message: err.message });
+  if (!user) {
+    throw buildError('User not found', 404);
   }
-};
+
+  user.isActive = true;
+
+  const updatedUser = await user.save();
+  res.json({
+    message: 'User activated successfully',
+    user: updatedUser
+  });
+});
+
+const deactivateUser = asyncHandler(async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid user id' });
+  }
+
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    throw buildError('User not found', 404);
+  }
+
+  user.isActive = false;
+
+  const updatedUser = await user.save();
+  res.json({
+    message: 'User deactivated successfully',
+    user: updatedUser
+  });
+});
 
 module.exports = {
   getAllUsersAdmin,
