@@ -9,7 +9,15 @@ const serviceSchema = new mongoose.Schema({
     availability: [{ type: String }], 
     location: {
         city: { type: String },
-        area: { type: String }
+        area: { type: String },
+        location: {
+  city: { type: String },
+  area: { type: String },
+  zipCode: {
+    type: String,
+    set: (value) => (value === undefined || value === null ? '' : String(value).trim())
+  }
+},
     },
     createdAt: { type: Date, default: Date.now }
 });

@@ -8,8 +8,8 @@ const {
   createBooking
 } = require('../controllers/bookingController');
 
-router.get('/', getAllBookings);
-router.get('/:id', getBookingById);
+router.get('/', requireAuthentication, getAllBookings);
+router.get('/:id', requireAuthentication, getBookingById);
 router.post('/', requireAuthentication, requireRole('customer'), createBooking);
 
 module.exports = router;
