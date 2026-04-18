@@ -85,7 +85,7 @@ function AuthProvider({ children }) {
           isSignedIn: true,
           token: token || null,
           clerkId: userId || null,
-          role: appUser?.role || 'customer',
+          role: appUser?.role || null,
           user: appUser || user || null,
         }));
       } catch {
