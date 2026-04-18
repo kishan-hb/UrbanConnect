@@ -33,6 +33,32 @@ function canAccessBooking(requester, booking) {
   return false;
 }
 
+async function updateBookingStatus({ req, res, targetStatus, allowedCurrentStatuses, forbiddenMessage }) {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid booking id' });
+  }
+
+  const booking = await Booking.findById(req.params.id);
+  if (!booking) {
+    return res.status(404).json({ message: 'Booking not found' });
+  }
+
+  const requester = await getRequesterByClerkId(req.auth?.userId);
+  if (requester.role !== 'admin') {
+    return res.status(403).json({ message: forbiddenMessage || 'Forbidden' });
+  }
+
+  if (!allowedCurrentStatuses.includes(booking.status)) {
+    return res.status(409).json({
+      message: `Cannot move booking from ${booking.status} to ${targetStatus}`,
+    });
+  }
+
+  booking.status = targetStatus;
+  await booking.save();
+  return res.json(booking);
+}
+
 const getAllBookings = asyncHandler(async (req, res) => {
   const requester = await getRequesterByClerkId(req.auth?.userId);
 
@@ -73,7 +99,7 @@ const createBooking = asyncHandler(async (req, res) => {
 
   if (!requiredFields.isValid) {
     return res.status(400).json({
-      message: `Missing required fields: ${requiredFields.missingFields.join(', ')}`
+      message: `Missing required fields: ${requiredFields.missingFields.join(', ')}`,
     });
   }
 
@@ -109,7 +135,7 @@ const createBooking = asyncHandler(async (req, res) => {
     providerClerkId: provider.clerkId,
     serviceId,
     date,
-    timeSlot
+    timeSlot,
   });
 
   try {
@@ -125,8 +151,66 @@ const createBooking = asyncHandler(async (req, res) => {
   }
 });
 
+const confirmBookingAdmin = asyncHandler(async (req, res) => {
+  return updateBookingStatus({
+    req,
+    res,
+    targetStatus: 'confirmed',
+    allowedCurrentStatuses: ['pending'],
+    forbiddenMessage: 'Forbidden: only admins can approve bookings',
+  });
+});
+
+const cancelBookingAdmin = asyncHandler(async (req, res) => {
+  return updateBookingStatus({
+    req,
+    res,
+    targetStatus: 'cancelled',
+    allowedCurrentStatuses: ['pending', 'confirmed'],
+    forbiddenMessage: 'Forbidden: only admins can cancel bookings',
+  });
+});
+
+const completeBookingAdmin = asyncHandler(async (req, res) => {
+  return updateBookingStatus({
+    req,
+    res,
+    targetStatus: 'completed',
+    allowedCurrentStatuses: ['confirmed'],
+    forbiddenMessage: 'Forbidden: only admins can mark bookings completed',
+  });
+});
+
+const deleteBookingAdmin = asyncHandler(async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: 'Invalid booking id' });
+  }
+
+  const requester = await getRequesterByClerkId(req.auth?.userId);
+  if (requester.role !== 'admin') {
+    return res.status(403).json({ message: 'Forbidden: only admins can delete bookings' });
+  }
+
+  const deletedBooking = await Booking.findByIdAndDelete(req.params.id);
+  if (!deletedBooking) {
+    return res.status(404).json({ message: 'Booking not found' });
+  }
+
+  return res.json({
+    message: 'Booking deleted successfully',
+    bookingId: deletedBooking._id,
+  });
+});
+
 module.exports = {
   getAllBookings,
   getBookingById,
-  createBooking
+  createBooking,
+  confirmBookingAdmin,
+  cancelBookingAdmin,
+  completeBookingAdmin,
+  deleteBookingAdmin,
 };
+
+
+
