@@ -37,7 +37,7 @@ async function main() {
       process.exitCode = 1;
       return;
     }
-
+    
     if (user.role === 'admin') {
       console.log('User is already an admin:', {
         id: user._id.toString(),
@@ -45,7 +45,7 @@ async function main() {
         clerkId: user.clerkId
       });
       return;
-    }
+    } 
 
     user.role = 'admin';
     user.approvedByAdmin = true;
