@@ -7,6 +7,9 @@ function Navbar() {
   const { authState } = useAuth();
   const { signOut } = useClerk();
   const navigate = useNavigate();
+  if (!authState?.isLoaded ) {
+    return null;
+  }
 
   const isSignedIn = Boolean(authState?.isSignedIn);
   const role = authState?.role;
@@ -35,35 +38,33 @@ function Navbar() {
       </Link>
 
       <div className="site-nav-links">
-        <NavLink to="/" className="site-nav-link">
-          Home
-        </NavLink>
-
-        <NavLink to="/services" className="site-nav-link">
-          Find Services
-        </NavLink>
-
-        <NavLink to="/contact" className="site-nav-link">
-          Contact
-        </NavLink>
-
-        {isSignedIn && role === 'customer' ? (
-          <NavLink to="/booking" className="site-nav-link">
-            Booking
-          </NavLink>
-        ) : null}
-
-        {isSignedIn && role === 'provider' ? (
-          <NavLink to="/provider" className="site-nav-link">
-            Provider Dashboard
-          </NavLink>
-        ) : null}
-
         {isSignedIn && role === 'admin' ? (
           <NavLink to="/admin" className="site-nav-link">
             Admin Dashboard
           </NavLink>
-        ) : null}
+        ) : (
+          <>
+            <NavLink to="/" className="site-nav-link">
+              Home
+            </NavLink>
+            <NavLink to="/services" className="site-nav-link">
+              Find Services
+            </NavLink>
+            <NavLink to="/contact" className="site-nav-link">
+              Contact
+            </NavLink>
+            {isSignedIn && role === 'customer' && (
+              <NavLink to="/booking" className="site-nav-link">
+                Booking
+              </NavLink>
+            )}
+            {isSignedIn && role === 'provider' && (
+              <NavLink to="/provider" className="site-nav-link">
+                Provider Dashboard
+              </NavLink>
+            )}
+          </>
+        )}
       </div>
 
       <div className="site-nav-actions">
