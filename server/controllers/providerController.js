@@ -1,6 +1,8 @@
 const User = require('../models/user');
 const Service = require('../models/services');
 const asyncHandler = require('../utils/asyncHandler');
+const Booking = require('../models/booking');
+const Review = require('../models/review');
 
 function buildError(message, status) {
   const error = new Error(message);
@@ -47,6 +49,52 @@ const getProviderStatus = asyncHandler(async (req, res) => {
     isActive: req.user.isActive
   });
 });
+
+// --- Dashboard Stats Implementation ---
+const getProviderDashboardStats = asyncHandler(async (req, res) => {
+  const providerId = req.user._id;
+  const clerkId = req.user.clerkId;
+
+  // Pending requests
+  const pendingRequests = await Booking.countDocuments({
+    providerClerkId: clerkId,
+    status: 'pending'
+  });
+
+  // Upcoming jobs (next 7 days)
+  const now = new Date();
+  const sevenDaysLater = new Date();
+  sevenDaysLater.setDate(now.getDate() + 7);
+  const upcomingJobs = await Booking.countDocuments({
+    providerClerkId: clerkId,
+    status: 'confirmed',
+    date: { $gte: now, $lte: sevenDaysLater }
+  });
+
+  // Completed jobs this month
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  const completedThisMonth = await Booking.countDocuments({
+    providerClerkId: clerkId,
+    status: 'completed',
+    date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth }
+  });
+
+  // Average rating
+  const ratingAgg = await Review.aggregate([
+    { $match: { providerClerkId: clerkId } },
+    { $group: { _id: null, avg: { $avg: '$rating' } } }
+  ]);
+  const averageRating = ratingAgg[0]?.avg ? ratingAgg[0].avg.toFixed(2) : '0.0';
+
+  res.json({
+    pendingRequests,
+    upcomingJobs,
+    completedThisMonth,
+    averageRating
+  });
+});
+// --- End Dashboard Stats ---
 
 const updateProviderProfile = asyncHandler(async (req, res) => {
   const allowedFields = ['username', 'profilePicture', 'phone', 'bio'];
@@ -120,6 +168,7 @@ const getProviderServicesByClerkId = asyncHandler(async (req, res) => {
 module.exports = {
   getProviderProfile,
   getProviderStatus,
+  getProviderDashboardStats, // <-- Export the new controller
   updateProviderProfile,
   updateProviderDocuments,
   getMyServices,

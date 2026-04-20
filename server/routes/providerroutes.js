@@ -9,7 +9,8 @@ const {
   updateProviderDocuments,
   getMyServices,
   getProviderByClerkId,
-  getProviderServicesByClerkId
+  getProviderServicesByClerkId,
+  getProviderDashboardStats
 } = require('../controllers/providerController');
 
 router.get('/me', requireAuthentication, requireRole('provider'), getProviderProfile);
@@ -17,6 +18,7 @@ router.get('/me/status', requireAuthentication, requireRole('provider'), getProv
 router.patch('/me/profile', requireAuthentication, requireRole('provider'), updateProviderProfile);
 router.patch('/me/documents', requireAuthentication, requireRole('provider'), updateProviderDocuments);
 router.get('/me/services', requireAuthentication, requireRole('provider'), getMyServices);
+router.get('/me/dashboard-stats', requireAuthentication, requireRole('provider'), getProviderDashboardStats);
 
 router.get('/:clerkId', getProviderByClerkId);
 router.get('/:clerkId/services', getProviderServicesByClerkId);

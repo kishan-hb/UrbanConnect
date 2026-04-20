@@ -4,31 +4,7 @@ import DashboardPanel from '../components/dashboard/DashboardPanel';
 import DashboardShell from '../components/dashboard/DashboardShell';
 import DashboardStatCard from '../components/dashboard/DashboardStatCard';
 import './DashboardPages.css';
-
-const providerStats = [
-  {
-    label: 'Pending requests',
-    value: '08',
-    detail: 'New service requests waiting for your review.',
-    tone: 'highlight',
-  },
-  {
-    label: 'Upcoming jobs',
-    value: '05',
-    detail: 'Confirmed visits scheduled for the next 7 days.',
-  },
-  {
-    label: 'Completed this month',
-    value: '18',
-    detail: 'Successfully delivered appointments in progress this cycle.',
-    tone: 'success',
-  },
-  {
-    label: 'Average rating',
-    value: '4.9',
-    detail: 'Trusted by homeowners for precision and reliability.',
-  },
-];
+import useProviderDashboardData from '../hooks/userProviderDashboardData';
 
 const newRequests = [
   {
@@ -133,6 +109,35 @@ function ProviderDashboardPage() {
   const [activeSection, setActiveSection] = useState('services');
   const activeConfig = providerSections.find((section) => section.id === activeSection);
 
+  // Use the dynamic stats hook
+  const { stats, loading, error } = useProviderDashboardData();
+
+  // Map stats to cards
+  const providerStats = [
+    {
+      label: 'Pending requests',
+      value: loading ? '--' : (stats?.pendingRequests ?? '--'),
+      detail: 'New service requests waiting for your review.',
+      tone: 'highlight',
+    },
+    {
+      label: 'Upcoming jobs',
+      value: loading ? '--' : (stats?.upcomingJobs ?? '--'),
+      detail: 'Confirmed visits scheduled for the next 7 days.',
+    },
+    {
+      label: 'Completed this month',
+      value: loading ? '--' : (stats?.completedThisMonth ?? '--'),
+      detail: 'Successfully delivered appointments in progress this cycle.',
+      tone: 'success',
+    },
+    {
+      label: 'Average rating',
+      value: loading ? '--' : (stats?.averageRating ?? '--'),
+      detail: 'Trusted by homeowners for precision and reliability.',
+    },
+  ];
+
   return (
     <DashboardShell
       kicker="Provider workspace"
@@ -141,6 +146,11 @@ function ProviderDashboardPage() {
       meta="Today's focus: 3 requests need a response before noon."
     >
       <section className="dashboard-stats-grid">
+        {error && (
+          <div className="dashboard-error">
+            {error}
+          </div>
+        )}
         {providerStats.map((stat) => (
           <DashboardStatCard key={stat.label} {...stat} />
         ))}

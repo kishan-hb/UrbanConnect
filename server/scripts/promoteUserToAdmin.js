@@ -38,8 +38,8 @@ async function main() {
       return;
     }
     
-    if (user.role === 'admin') {
-      console.log('User is already an admin:', {
+    if (user.role === 'provider') {
+      console.log('User is already a provider:', {
         id: user._id.toString(),
         email: user.email,
         clerkId: user.clerkId
@@ -47,14 +47,14 @@ async function main() {
       return;
     } 
 
-    user.role = 'admin';
+    user.role = 'provider';
     user.approvedByAdmin = true;
     user.backgroundCheckStatus = 'approved';
     user.isActive = true;
 
     await user.save();
 
-    console.log('Admin role granted successfully:', {
+    console.log('Provider role granted successfully:', {
       id: user._id.toString(),
       email: user.email,
       clerkId: user.clerkId,
@@ -66,7 +66,7 @@ async function main() {
 }
 
 main().catch(async (err) => {
-  console.error('Failed to promote user to admin:', err.message);
+  console.error('Failed to promote user to provider:', err.message);
   try {
     await mongoose.disconnect();
   } catch {
