@@ -17,12 +17,10 @@ function SignInPage() {
   const email = query.get('email') || '';
   const { authState } = useAuth();
   const navigate = useNavigate();
-  console.log('authState:', authState);
-
 
   useEffect(() => {
-    if (authState?.isLoaded && authState?.isSignedIn && authState?.role === 'admin') {
-      navigate('/admin', { replace: true });
+    if (authState?.isLoaded && authState?.isSignedIn) {
+      navigate('/auth/redirect', { replace: true });
     }
   }, [authState, navigate]);
 
@@ -36,7 +34,7 @@ function SignInPage() {
   signUpUrl={email ? `/sign-up?email=${encodeURIComponent(email)}` : '/sign-up'}
   appearance={clerkAuthAppearance}
   initialValues={email ? { identifier: email } : undefined}
-  afterSignInUrl="/admin"
+  afterSignInUrl="/auth/redirect"
 />
 
       </div>

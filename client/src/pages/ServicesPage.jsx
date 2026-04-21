@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getAllServices } from '../api/servicesApi';
 import './ServicesPage.css';
+import { useRequireCustomerSignIn } from '../hooks/useRequireCustomerSignIn';
 
 const serviceCategories = [
   'All Services',
@@ -13,6 +14,9 @@ const serviceCategories = [
 ];
 
 function ServicesPage() {
+  const navigate = useNavigate();
+  const requireCustomerSignIn = useRequireCustomerSignIn();
+
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
@@ -43,8 +47,16 @@ function ServicesPage() {
   }, [searchQuery, zipQuery]);
 
   function handleSearchSubmit() {
-    setSearchQuery(searchInput.trim());
-    setZipQuery(zipInput.trim());
+    requireCustomerSignIn(() => {
+      setSearchQuery(searchInput.trim());
+      setZipQuery(zipInput.trim());
+
+      setTimeout(() => {
+        if (services.length > 0) {
+          navigate(`/services/${services[0]._id}`);
+        }
+      }, 300); // 300ms delay to allow state update and fetch
+    });
   }
 
   function handleSearchKeyDown(event) {
@@ -52,6 +64,12 @@ function ServicesPage() {
       event.preventDefault();
       handleSearchSubmit();
     }
+  }
+
+  function handleViewDetails(serviceId) {
+    requireCustomerSignIn(() => {
+      navigate(`/services/${serviceId}`);
+    });
   }
 
   const servicesCountLabel = useMemo(() => {
@@ -158,10 +176,9 @@ function ServicesPage() {
                     <strong>{typeof service.price === 'number' ? `From $${service.price}` : 'Custom quote'}</strong>
                     <span>{service.location?.zipCode || service.location?.city || 'Location not specified'}</span>
                   </div>
-
-                  <Link to={`/services/${service._id}`} className="service-card-link">
-                    View Details
-                  </Link>
+                  <button type="button" className="service-card-link" onClick={() => handleViewDetails(service._id)}>
+                  View Details
+                  </button>
                 </div>
               </div>
             </article>
