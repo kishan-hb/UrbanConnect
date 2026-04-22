@@ -29,6 +29,10 @@ function BookingPage() {
     fullName: '',
     email: '',
     phone: '',
+    address: '',
+    city: '',
+    zipCode: '',
+    instructions: '',
     date: '',
     cardName: '',
     cardNumber: '',
@@ -83,8 +87,18 @@ function BookingPage() {
     const bookingPayload = {
       bookingId: `BK-${Date.now()}`,
       serviceId,
+      serviceTitle,
       date: formState.date,
       timeSlot: '10:00-12:00',
+      customerDetails: {
+        fullName: formState.fullName,
+        email: formState.email,
+        phone: formState.phone,
+        address: formState.address,
+        city: formState.city,
+        zipCode: formState.zipCode,
+        instructions: formState.instructions,
+      },
     };
 
     try {
@@ -169,6 +183,53 @@ function BookingPage() {
                       value={formState.date}
                       onChange={updateField}
                       required
+                    />
+                  </label>
+
+                  <label className="booking-input-group full-width">
+                    <span>Service address</span>
+                    <input
+                      name="address"
+                      type="text"
+                      value={formState.address}
+                      onChange={updateField}
+                      placeholder="123 Main Street, Apt 4B"
+                      required
+                    />
+                  </label>
+
+                  <label className="booking-input-group">
+                    <span>City</span>
+                    <input
+                      name="city"
+                      type="text"
+                      value={formState.city}
+                      onChange={updateField}
+                      placeholder="Vancouver"
+                      required
+                    />
+                  </label>
+
+                  <label className="booking-input-group">
+                    <span>Zip code</span>
+                    <input
+                      name="zipCode"
+                      type="text"
+                      value={formState.zipCode}
+                      onChange={updateField}
+                      placeholder="V6B 1A1"
+                      required
+                    />
+                  </label>
+
+                  <label className="booking-input-group full-width">
+                    <span>Special instructions</span>
+                    <textarea
+                      name="instructions"
+                      rows="4"
+                      value={formState.instructions}
+                      onChange={updateField}
+                      placeholder="Parking notes, entry instructions, pets, or anything the provider should know."
                     />
                   </label>
                 </div>

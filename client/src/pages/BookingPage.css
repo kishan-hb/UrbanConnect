@@ -92,13 +92,19 @@
   font-weight: 700;
 }
 
-.booking-input-group input {
+.booking-input-group input,
+.booking-input-group textarea {
   background: #f4f7fb;
   border: 1px solid #e2eaf4;
   border-radius: 14px;
   color: #1f2935;
+  font-family: inherit;
   font-size: 0.95rem;
   padding: 14px 14px;
+}
+
+.booking-input-group textarea {
+  resize: vertical;
 }
 
 .booking-actions-row {
