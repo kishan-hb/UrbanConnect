@@ -1,10 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+
+  --color-text-primary: #1f2935;
+  --color-text-heading: #20262d;
+  --color-text-emphasis: #16355e;
+  --color-text-secondary: #677d98;
+  --color-text-muted: #5d6d80;
+  --color-text-soft: #72839a;
+  --color-text-control: #6c7c8f;
+  --color-text-field: #455568;
+  --color-text-label: #94a4b6;
+  --color-text-placeholder: #6d7d90;
+  --color-brand-primary: #0c4ea3;
+  --color-brand-accent: #0c63c9;
+  --color-brand-strong: #0d56a8;
+  --color-brand-secondary: #1a5ca9;
+  --color-brand-link: #0f56b0;
+  --color-kicker: #5a7aa4;
+
+  --color-surface-page: #f5f8fc;
+  --color-surface-card: #ffffff;
+  --color-surface-muted: #eef3fa;
+  --color-surface-brand-soft: #e6effb;
+  --color-border-soft: #e4ebf5;
+  --color-border-strong: #d4deec;
+
+  --shadow-card-sm: 0 8px 24px rgba(16, 35, 61, 0.06);
+  --shadow-card-md: 0 16px 36px rgba(16, 35, 61, 0.08);
+
+  --font-size-kicker: 0.82rem;
+  --font-size-label-sm: 0.78rem;
+  --font-size-label-xs: 0.74rem;
+  --font-size-body-lg: 1rem;
+  --font-size-body-md: 0.96rem;
+  --font-size-body-sm: 0.94rem;
+  --font-size-body-xs: 0.8rem;
+  --font-size-body-input: 0.95rem;
+  --font-size-heading-hero: clamp(2rem, 5.2vw, 3.2rem);         /* Main hero title */
+  --font-size-heading-section: clamp(1.5rem, 3vw, 2.2rem);      /* Section titles */
+  --font-size-heading-categories: clamp(1.3rem, 2.2vw, 1.7rem); /* Category titles */
+  --font-size-heading-journey: clamp(1.2rem, 2vw, 1.5rem);      /* Journey/step titles */
+  --font-size-heading-professionals: clamp(1.1rem, 1.8vw, 1.3rem); /* Smaller section titles */
+  --font-size-heading-card-lg: clamp(1.05rem, 1.4vw, 1.18rem);  /* Large card titles */
+  --font-size-heading-card-md: clamp(0.98rem, 1.1vw, 1.08rem);  /* Medium card titles */
+  --font-size-heading-card-sm: 0.92rem;                         /* Small card titles */
+  --font-size-heading-profile: 1.05rem;                         /* Profile names */
+  --font-size-heading-cta: clamp(1.4rem, 2.2vw, 2rem);          /* Call-to-action titles */
+  --font-size-badge-value: 1.1rem;                              /* Badge numbers/values */
+
+  --line-height-heading-tight: 0.92;
+  --line-height-body: 1.7;
+  --line-height-body-compact: 1.45;
+  --tracking-tight: -0.03em;
+  --tracking-hero: -0.04em;
+  --tracking-wide: 0.08em;
+  --tracking-service: 0.12em;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-text-primary);
+  background: var(--color-surface-page);
 }
 
 code {

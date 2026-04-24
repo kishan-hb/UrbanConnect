@@ -1,0 +1,36 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest --runInBand",
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "make-admin": "node scripts/promoteUserToAdmin.js",
+        "create-test-user": "node scripts/createTestUser.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "@clerk/express": "^2.0.7",
+        "bcryptjs": "^3.0.3",
+        "cors": "^2.8.6",
+        "dotenv": "^17.3.1",
+        "envalid": "^8.1.1",
+        "express": "^5.2.1",
+        "jsonwebtoken": "^9.0.3",
+        "mongodb": "^7.5.0",
+        "mongoose": "^9.3.3",
+        "openai": "^6.34.0",
+        "update": "^0.7.4",
+        "winston": "^3.19.0"
+    },
+    "devDependencies": {
+        "jest": "^30.3.0",
+        "nodemon": "^3.1.14",
+        "supertest": "^7.2.2"
+    }
+}

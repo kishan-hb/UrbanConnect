@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# UrbanConnect Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This client app is the frontend for UrbanConnect, a marketplace platform that connects customers with local service providers through browsing, booking, review, provider management, and admin approval workflows.
+
+## Current Status
+
+- React app scaffold is present
+- frontend implementation has not started yet
+- backend APIs, auth middleware, validation, and tests already exist in `server/`
+- frontend planning backlog is documented in [public/docs/FRONTEND_JIRA_PLAN.md](./public/docs/FRONTEND_JIRA_PLAN.md)
+
+## Planned Frontend Scope
+
+- public browsing of services
+- Clerk-based authentication and protected routes
+- customer booking and review flows
+- provider dashboard for profile, status, documents, and service creation
+- admin dashboard for user management and provider approval actions
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the `client` directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Runs the frontend in development mode at `http://localhost:3000`.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the frontend test suite.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the production bundle.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Next Step
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Start with Sprint 1 from the Jira plan:
 
-### `npm run eject`
+- set up frontend architecture
+- add routing and shared app shell
+- create API and environment foundation
+- integrate Clerk on the frontend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Notes
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- This repo keeps architecture notes under `client/public/docs/`
+- The backend currently runs separately from the frontend
