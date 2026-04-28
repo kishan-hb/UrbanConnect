@@ -165,6 +165,12 @@ const getProviderServicesByClerkId = asyncHandler(async (req, res) => {
   res.json(services);
 });
 
+const getAllApprovedProviders = asyncHandler(async (req, res) => {
+  const providers = await User.find({ role: 'provider', approvedByAdmin: true, isActive: true });
+  console.log('Approved providers', providers);
+  res.json(providers.map(toProviderPublic));
+});
+
 module.exports = {
   getProviderProfile,
   getProviderStatus,
@@ -173,5 +179,6 @@ module.exports = {
   updateProviderDocuments,
   getMyServices,
   getProviderByClerkId,
-  getProviderServicesByClerkId
+  getProviderServicesByClerkId,
+  getAllApprovedProviders
 };

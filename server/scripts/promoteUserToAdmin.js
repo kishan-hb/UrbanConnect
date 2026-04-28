@@ -39,7 +39,7 @@ async function main() {
     }
     
     if (user.role === 'provider') {
-      console.log('User is already a provider:', {
+      console.log('User is already an admin:', {
         id: user._id.toString(),
         email: user.email,
         clerkId: user.clerkId

@@ -10,7 +10,8 @@ const {
   getMyServices,
   getProviderByClerkId,
   getProviderServicesByClerkId,
-  getProviderDashboardStats
+  getProviderDashboardStats,
+  getAllApprovedProviders
 } = require('../controllers/providerController');
 
 router.get('/me', requireAuthentication, requireRole('provider'), getProviderProfile);
@@ -22,5 +23,5 @@ router.get('/me/dashboard-stats', requireAuthentication, requireRole('provider')
 
 router.get('/:clerkId', getProviderByClerkId);
 router.get('/:clerkId/services', getProviderServicesByClerkId);
-
+router.get('/approved', getAllApprovedProviders);
 module.exports = router;
