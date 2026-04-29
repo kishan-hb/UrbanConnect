@@ -9,6 +9,9 @@ UrbanConnect is a service marketplace platform that connects customers with loca
 - gives admins protected endpoints for provider approval and platform oversight
 - supports reviews, booking validation, role-based access control, and backend route protection
 
+## Figma Design
+[View UrbanConnect Figma Prototype](https://www.figma.com/proto/4bgn31dS9UlrwEAkemrOaD/UrbanConnect?node-id=12-1279&t=yltFQLq5yz5NK14T-1)
+
 ## Tech Stack
 
 ### Frontend
