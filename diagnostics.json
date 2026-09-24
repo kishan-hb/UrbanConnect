@@ -1,3 +1,16 @@
 {
-  "summary": "Full-stack service marketplace connecting customers with local service providers through an end-to-end booking workflow. Built with React, Node.js/Express, MongoDB, and Clerk authentication, featuring role-based access control, provider approval pipelines, and automated test coverage."
+  "summary": "Full-stack service marketplace connecting customers with local service providers through seamless booking workflows.",
+  "challenge": "Local service discovery and booking are often fragmented, lacking reliable provider verification and structured scheduling workflows.",
+  "solution": "Delivered a centralized platform featuring role-based portals for seamless booking, service listing management, and administrative provider verification.",
+  "contributions": [
+    "Built the responsive React frontend with customer and provider portals",
+    "Designed protected REST APIs using Node.js, Express, and MongoDB",
+    "Implemented role-based authentication and security with Clerk",
+    "Developed automated test suites using Jest and Supertest"
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "status": "OPERATIONAL",
+    "uptime": "99.9%"
+  }
 }
