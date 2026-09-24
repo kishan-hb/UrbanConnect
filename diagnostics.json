@@ -1,2 +1,3 @@
-Full-stack service marketplace connecting customers with local service providers through an end-to-end booking workflow. 
-Built with React, Node.js/Express, MongoDB, and Clerk authentication, featuring role-based access control, provider approval pipelines, and automated test coverage.
+{
+  "summary": "Full-stack service marketplace connecting customers with local service providers through an end-to-end booking workflow. Built with React, Node.js/Express, MongoDB, and Clerk authentication, featuring role-based access control, provider approval pipelines, and automated test coverage."
+}
